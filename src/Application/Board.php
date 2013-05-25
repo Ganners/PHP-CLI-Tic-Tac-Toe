@@ -161,26 +161,40 @@ class Board {
                 }
 
                 //Check diagonal
-                if(($y + $requiredSequence-1) < $this->_yTiles) {
-                    if(($x + $requiredSequence-1) < $this->_xTiles) {
+                if(($y + $requiredSequence - 1) < $this->_yTiles) {
+                    if(($x + $requiredSequence - 1) < $this->_xTiles) {
                         for($xy = 0; $xy < $requiredSequence; $xy++) {
                             //This will check the diagonal moves until the end
                             $move = isset($this->_moves[$x+$xy][$y+$xy]) ? $this->_moves[$x+$xy][$y+$xy] : NULL;
 
                             //Increment player if there's one found on the tile
                             if($move instanceof Player_Interface) {
-                                if(isset($scores[ $this->_moves[$x][$y]->getId() ]["diag_from_{$x}_{$y}"]))
-                                    ++$scores[ $this->_moves[$x][$y]->getId() ]["diag_from_{$x}_{$y}"];
+                                if(isset($scores[ $this->_moves[$x+$xy][$y+$xy]->getId() ]["diag_from_{$x}_{$y}"]))
+                                    ++$scores[ $this->_moves[$x+$xy][$y+$xy]->getId() ]["diag_from_{$x}_{$y}"];
                                 else
-                                    $scores[ $this->_moves[$x][$y]->getId() ]["diag_from_{$x}_{$y}"] = 1;
+                                    $scores[ $this->_moves[$x+$xy][$y+$xy]->getId() ]["diag_from_{$x}_{$y}"] = 1;
                             }
                         }
                     }
                 }
-                
-                //Check anti-diagnoal
-                
-                
+
+                if(($y + $requiredSequence - 1) < $this->_yTiles) {
+                    if(($x - $requiredSequence + 1) >= 0) {
+                        for($xy = 0; $xy < $requiredSequence; $xy++) {
+                            //This will check the diagonal moves until the end
+                            $move = isset($this->_moves[$x-$xy][$y+$xy]) ? $this->_moves[$x-$xy][$y+$xy] : NULL;
+
+                            //Increment player if there's one found on the tile
+                            if($move instanceof Player_Interface) {
+                                if(isset($scores[ $this->_moves[$x-$xy][$y+$xy]->getId() ]["antidiag_from_{$x}_{$y}"]))
+                                    ++$scores[ $this->_moves[$x-$xy][$y+$xy]->getId() ]["antidiag_from_{$x}_{$y}"];
+                                else
+                                    $scores[ $this->_moves[$x-$xy][$y+$xy]->getId() ]["antidiag_from_{$x}_{$y}"] = 1;
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
