@@ -17,7 +17,7 @@ class Launcher {
      * Public constructor
      */
     public function __construct() {
-        $this->inputHandler = new Input_Handler();
+        $this->_inputHandler = new Input_Handler();
     }
 
     /**
@@ -46,14 +46,14 @@ class Launcher {
      * Sets up our game board based on input
      */
     protected function setupBoard() {
-
+        
     }
 
     /**
      * Sets up our players based on input
      */
     protected function setupPlayers() {
-
+        
     }
 
     /**
@@ -68,31 +68,26 @@ class Launcher {
         $sendReceive = array(
             array(
                 'output_message'  => 'Welcome to the game, please input your board size (x,y): ',
-                'invalid_error'   => "Please enter your two numbers, seperated by a comma (x,y)",
-                'handler_method'  => 'toBoardDimensionArray',
+                'handler_method'  => 'toBoardSizeArray',
                 'set_as_variable' => '_boardDimensions'
             ),
             array(
                 'output_message'  => 'What is the name of player 1: ',
-                'invalid_error'   => "Please enter a string",
-                'handler_method'  => 'toPlayerName',
+                'handler_method'  => 'toString',
                 'set_as_variable' => '_player1Name'
             ),
             array(
                 'output_message'  => 'What is the name of player 2: ',
-                'invalid_error'   => "Please enter a string",
-                'handler_method'  => 'toPlayerName',
+                'handler_method'  => 'toString',
                 'set_as_variable' => '_player2Name'
             ),
             array(
                 'output_message'  => 'Is player 1 a bot? (y/n): ',
-                'invalid_error'   => "Please make sure to answer 'y' or 'n' only.",
                 'handler_method'  => 'toBool',
                 'set_as_variable' => '_player1Bot'
             ),
             array(
                 'output_message'  => 'Is player 2 a bot? (y/n): ',
-                'invalid_error'   => "Please make sure to answer 'y' or 'n' only.",
                 'handler_method'  => 'toBool',
                 'set_as_variable' => '_player2Bot'
             ),
@@ -105,6 +100,20 @@ class Launcher {
             } else {
                 $line = trim(fgets(STDIN));
                 if($line) {
+                    try {
+                        //Handler will throw an exception if invalid
+                        $handledInput = 
+                            $this->_inputHandler->{$sendReceive[$this->_inputsReceived]['handler_method']}($line);
+                    } catch(App_Exception $e) {
+
+                        // If we get an exception, display the message and rewind the output
+                        // so that it displays again
+                        echo $e->getMessage() . PHP_EOL;
+                        --$this->_outputsSent;
+                        continue;
+                    }
+
+                    //Set variable to an object var if it's all good
                     $this->{$sendReceive[$this->_inputsReceived]['set_as_variable']} = $line;
                     ++$this->_inputsReceived;
                 }
