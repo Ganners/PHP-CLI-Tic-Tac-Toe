@@ -2,7 +2,7 @@
 
 namespace Application\Util;
 
-use Application\App_Exception;
+use \Application\App_Exception;
 
 class Input_Handler {
 

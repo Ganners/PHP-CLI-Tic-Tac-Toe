@@ -2,7 +2,8 @@
 
 namespace Application;
 
-use Application\App_Exception;
+use \Application\App_Exception;
+use \Application\Player\Player_Interface;
 
 class Board {
 
@@ -48,7 +49,7 @@ class Board {
      * @param int $x
      * @param int $y
      */
-    public function makeMove(Player $player, $x, $y) {
+    public function makeMove(Player_Interface $player, $x, $y) {
 
         if(!is_int($x) || !is_int($y))
             throw new App_Exception('makeMove arguments must both be int');
@@ -60,7 +61,7 @@ class Board {
             throw new App_Exception('That selected tile already contains a move');
 
         //Make our move, adds player to tile by ID
-        $this->_moves[$x][$y] = $player->getId();
+        $this->_moves[$x][$y] = $player;
 
         return TRUE;
 
@@ -74,7 +75,7 @@ class Board {
      */
     public function draw($print = TRUE) {
 
-        $drawText = '';
+        $drawText = PHP_EOL;
 
         for($y = 0; $y < $this->_yTiles; ++$y) {
             //Before drawing horizontal tiles
@@ -84,7 +85,10 @@ class Board {
                 //For each of our horizontal tiles
                 
                 //Draw our player's move, else blank
-                $xDrawText .= ' ';
+                if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface)
+                    $xDrawText .= 'X';
+                else
+                    $xDrawText .= ' ';
 
                 if($x < $this->_xTiles-1)
                     $xDrawText .= $this->_wrapStringWithPadding($this->_xSeperator, 'x');
@@ -104,6 +108,9 @@ class Board {
             }
 
         }
+
+        //Add on a couple extra new lines
+        $drawText .= PHP_EOL . PHP_EOL;
 
         if($print)
             echo $drawText;
@@ -151,14 +158,30 @@ class Board {
      * @return bool
      */
     protected function _checkBounds($x, $y) {
-        
+
+        if($x < 1 || $x > $this->_xTiles)
+            return FALSE;
+
+        if($y < 1 || $y > $this->_yTiles)
+            return FALSE;
+
+        return TRUE;
+
     }
 
     /**
      * Checks if a tile has already been filled
+     * 
+     * @param int $x
+     * @param int $y
+     * 
+     * @return bool
      */
     protected function _checkMoveNotExists($x, $y) {
-        
+        if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface)
+            return FALSE;
+        else
+            return TRUE;
     }
 
 }

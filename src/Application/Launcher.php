@@ -2,9 +2,12 @@
 
 namespace Application;
 
-use Application\App_Exception;
-use Application\Util\Input_Handler;
-use Application\Board;
+use \Application\App_Exception;
+use \Application\Util\Input_Handler;
+use \Application\Board;
+
+use \Application\Player\Human;
+use \Application\Player\Bot;
 
 class Launcher {
 
@@ -15,8 +18,8 @@ class Launcher {
               $_inputHandler;
 
     protected $_board,
-              $_player1,
-              $_player2;
+              $_players = array(),
+              $_turn = 0;
 
     protected $_informationToGather = array(
                 array(
@@ -85,6 +88,30 @@ class Launcher {
             while(!$this->_terminate) {
 
                 //This is where we start the turn-based game play
+                
+                //Work out whose turn it is
+                $numPlayers = count($this->_players);
+
+                // This will in theory always return a key that exists in our
+                // players array! :-)
+                $turnKey = $this->_turn % $this->_players;
+
+                echo $this->_players[$turnKey]->getName() . ', it is now your turn to make a move!' . PHP_EOL .
+                        'To do so please enter the x,y co-ordinates of your move (e.g. 2,1): ';
+
+                $move = $this->_players[$turnKey]->triggerTurn($this->_board);
+
+                if($move) {
+                    // Make a move and up the turn!
+                    $this->_board->makeMove(
+                        $this->_players[$turnKey],
+                        (int) $move[0],
+                        (int) $move[1]
+                        );
+
+                    $this->_board->draw();
+                    ++$this->_turn;
+                }
 
             }
         } else {
@@ -115,11 +142,39 @@ class Launcher {
 
     /**
      * Sets up our players based on input
+     * 
+     * @return bool
+     * 
+     * @todo Make this more dry, e.g. Player factory method
      */
     protected function _setupPlayers() {
+
+        //Sort-of factory for player 1
+        if($this->_player1Name) {
+            if($this->_player1Bot)
+                $this->_players[0] = new Bot($this->_player1Name, 0);
+            else
+                $this->_players[0] = new Human($this->_player1Name, 0);
+        }
+
+        //Sort of factory for player 2
+        if($this->_player2Name) {
+            if($this->_player2Bot)
+                $this->_players[1] = new Bot($this->_player2Name, 1);
+            else
+                $this->_players[1] = new Human($this->_player2Name, 1);
+        }
+
+        if(count($this->_players) < 2)
+            throw new App_Exception('Could not create the minimum number of players to continue');
+
         return TRUE;
     }
 
+    /**
+     * Restarts all of our object data to an early state,
+     * before information had been set.
+     */
     protected function _resetStartupData() {
         foreach($this->_informationToGather as $key => $value) {
             if(isset($this->{$value['set_as_variable']}))
