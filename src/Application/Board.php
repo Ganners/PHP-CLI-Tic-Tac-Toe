@@ -159,10 +159,10 @@ class Board {
      */
     protected function _checkBounds($x, $y) {
 
-        if($x < 1 || $x > $this->_xTiles)
+        if($x < 0 || $x > $this->_xTiles)
             return FALSE;
 
-        if($y < 1 || $y > $this->_yTiles)
+        if($y < 0 || $y > $this->_yTiles)
             return FALSE;
 
         return TRUE;
