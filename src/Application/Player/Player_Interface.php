@@ -9,7 +9,7 @@ interface Player_Interface {
 	/*
 	 * Set up the name and Id of the player
 	 */
-	public function __construct($name, $uid);
+	public function __construct($name, $uid, $marker);
 
 	/**
 	 * Gets the move of the player. If this is a human, it will

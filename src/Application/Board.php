@@ -86,7 +86,7 @@ class Board {
                 
                 //Draw our player's move, else blank
                 if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface)
-                    $xDrawText .= 'X';
+                    $xDrawText .= $this->_moves[$x][$y]->getMarker();
                 else
                     $xDrawText .= ' ';
 

@@ -152,17 +152,17 @@ class Launcher {
         //Sort-of factory for player 1
         if($this->_player1Name) {
             if($this->_player1Bot)
-                $this->_players[0] = new Bot($this->_player1Name, 0);
+                $this->_players[0] = new Bot($this->_player1Name, 0, 'O');
             else
-                $this->_players[0] = new Human($this->_player1Name, 0);
+                $this->_players[0] = new Human($this->_player1Name, 0, 'O');
         }
 
         //Sort of factory for player 2
         if($this->_player2Name) {
             if($this->_player2Bot)
-                $this->_players[1] = new Bot($this->_player2Name, 1);
+                $this->_players[1] = new Bot($this->_player2Name, 1, 'X');
             else
-                $this->_players[1] = new Human($this->_player2Name, 1);
+                $this->_players[1] = new Human($this->_player2Name, 1, 'X');
         }
 
         if(count($this->_players) < 2)

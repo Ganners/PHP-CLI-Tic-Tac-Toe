@@ -17,10 +17,11 @@ class Human implements Player_Interface {
 	/*
 	 * Set up the name and Id of the player
 	 */
-	public function __construct($name, $uid) {
+	public function __construct($name, $uid, $marker) {
 		$this->_inputHandler = new Input_Handler();
 		$this->_name = $name;
 		$this->_uid = $uid;
+		$this->setMarker($marker);
 	}
 
 	/**
