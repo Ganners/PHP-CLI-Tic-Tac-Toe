@@ -94,7 +94,7 @@ class Launcher {
 
                 // This will in theory always return a key that exists in our
                 // players array! :-)
-                $turnKey = $this->_turn % $this->_players;
+                $turnKey = $this->_turn % $numPlayers;
 
                 echo $this->_players[$turnKey]->getName() . ', it is now your turn to make a move!' . PHP_EOL .
                         'To do so please enter the x,y co-ordinates of your move (e.g. 2,1): ';
