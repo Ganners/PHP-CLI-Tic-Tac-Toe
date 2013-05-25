@@ -131,8 +131,28 @@ class Board {
         //This gives us the sequence in a row we need
         $requiredSequence = $this->_xTiles < $this->_yTiles ? $this->_xTiles : $this->_yTiles;
 
+        $scores = $this->tallyScores($requiredSequence, $users);
+
+        //Now we loop through our tallies and see if any of them have added up to  our required sequence
+        foreach($scores as $userId => $userTally) {
+            foreach($userTally as $directionalAxisTally) {
+                if($directionalAxisTally === $requiredSequence) {
+                    //Loop through our user ID's and return their object
+                    if(isset($users[$userId])) {
+                        return $users[$userId];
+                    }
+                }
+            }
+        }
+
+        return FALSE;
+
+
+    }
+
+    public function tallyScores($requiredSequence, &$users = array()) {
+
         $scores = array();
-        $users = array();
 
         //First we create our tallys
         for($y = 0; $y < $this->_yTiles; ++$y) {
@@ -144,7 +164,7 @@ class Board {
                         $users[ $this->_moves[$x][$y]->getId() ] = $this->_moves[$x][$y];
                 }
 
-                //Check horiztonal
+                //Check horiztonald
                 if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface) {
                     if(isset($scores[ $this->_moves[$x][$y]->getId() ]["y_{$y}"]))
                         ++$scores[ $this->_moves[$x][$y]->getId() ]["y_{$y}"];
@@ -194,25 +214,11 @@ class Board {
                         }
                     }
                 }
-
             }
         }
 
-        //Now we loop through our tallies and see if any of them have added up to  our required sequence
-        foreach($scores as $userId => $userTally) {
-            foreach($userTally as $directionalAxisTally) {
-                if($directionalAxisTally === $requiredSequence) {
-                    //Loop through our user ID's and return their object
-                    if(isset($users[$userId])) {
-                        return $users[$userId];
-                    }
-                }
-            }
-        }
-
-        return FALSE;
-
-
+        return $scores;
+        
     }
 
     protected function _wrapStringWithPadding($string, $direction) {
