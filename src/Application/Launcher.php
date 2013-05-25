@@ -100,9 +100,27 @@ class Launcher {
                         'To do so please enter the x,y co-ordinates of your move (e.g. 2,1): ';
 
                 if( $this->_players[$turnKey]->triggerTurn($this->_board) ) {
-                    // Redraw the board
-                    $this->_board->draw();
-                    ++$this->_turn;
+                    if(!$winner = $this->_board->checkWin()) {
+                        // Redraw the board
+                        $this->_board->draw();
+                        ++$this->_turn;
+                    } else {
+                        echo 
+"
+***************************************************************
+***************************************************************
+
+Congratulations " . $winner->getName() . ", you have won!
+
+***************************************************************
+
+Thank you for playing, this game was created by Mark Gannaway
+
+***************************************************************
+***************************************************************
+";
+                        $this->_terminate = TRUE;
+                    }
                 }
 
             }

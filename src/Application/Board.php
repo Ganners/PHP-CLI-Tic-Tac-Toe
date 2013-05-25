@@ -124,9 +124,59 @@ class Board {
      * Checks if there is a win, a win is determined by the smallest of 
      * the boards tile lengths (x or y)
      * 
-     * @return int - The player Id
+     * @return int
      */
     public function checkWin() {
+
+        //This gives us the sequence in a row we need
+        $requiredSequence = $this->_xTiles < $this->_yTiles ? $this->_xTiles : $this->_yTiles;
+
+        $scores = array();
+        $users = array();
+
+        //First we create our tallys
+        for($y = 0; $y < $this->_yTiles; ++$y) {
+            for($x = 0; $x < $this->_xTiles; ++$x) {
+
+                //Set a reference for that user for use later on
+                if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface) {
+                    if(!isset($users[ $this->_moves[$x][$y]->getId() ]))
+                        $users[ $this->_moves[$x][$y]->getId() ] = $this->_moves[$x][$y];
+                }
+
+                //Check horiztonal
+                if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface) {
+                    if(isset($scores[ $this->_moves[$x][$y]->getId() ]["y_{$y}"]))
+                        ++$scores[ $this->_moves[$x][$y]->getId() ]["y_{$y}"];
+                    else
+                        $scores[ $this->_moves[$x][$y]->getId() ]["y_{$y}"] = 1;
+                }
+
+                //Check vertical
+                if(isset($this->_moves[$x][$y]) && $this->_moves[$x][$y] instanceof Player_Interface) {
+                    if(isset($scores[ $this->_moves[$x][$y]->getId() ]["x_{$x}"]))
+                        ++$scores[ $this->_moves[$x][$y]->getId() ]["x_{$x}"];
+                    else
+                        $scores[ $this->_moves[$x][$y]->getId() ]["x_{$x}"] = 1;
+                }
+                
+            }
+        }
+
+        //Now we loop through our tallies and see if any of them have added up to  our required sequence
+        foreach($scores as $userId => $userTally) {
+            foreach($userTally as $directionalAxisTally) {
+                if($directionalAxisTally === $requiredSequence) {
+                    //Loop through our user ID's and return their object
+                    if(isset($users[$userId])) {
+                        return $users[$userId];
+                    }
+                }
+            }
+        }
+
+        return FALSE;
+
 
     }
 
