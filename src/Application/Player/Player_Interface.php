@@ -31,4 +31,15 @@ interface Player_Interface {
 	 */
 	public function getId();
 
+	/**
+	 * Returns the marker character
+	 */
+	public function getMarker();
+
+	/**
+	 * Allows the setting of the marker, which is
+	 * a 1 character identified (generally X or O)
+	 */
+	public function setMarker($marker);
+
 }

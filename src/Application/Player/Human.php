@@ -11,7 +11,8 @@ class Human implements Player_Interface {
 
 	protected $_name,
 			  $_uid,
-			  $_inputHandler;
+			  $_inputHandler,
+			  $_marker = '?';
 
 	/*
 	 * Set up the name and Id of the player
@@ -59,6 +60,8 @@ class Human implements Player_Interface {
 
 	/**
 	 * Returns a name of the player
+	 * 
+	 * @return string
 	 */
 	public function getName() {
 		return $this->_name;
@@ -66,9 +69,37 @@ class Human implements Player_Interface {
 
 	/**
 	 * Returns a Id of the player
+	 * 
+	 * @return int
 	 */
 	public function getId() {
 		return $this->_uid;
+	}
+
+	/**
+	 * Returns the marker character
+	 * 
+	 * @return string
+	 */
+	public function getMarker() {
+		return $this->_marker;
+	}
+
+	/**
+	 * Allows the setting of the marker, which is
+	 * a 1 character identified (generally X or O)
+	 * 
+	 * @param string $marker - The 1 character identifier for player
+	 * 
+	 * @return bool
+	 * 
+	 * @throws App_Exception if isn't a string or string length isn't 1
+	 */
+	public function setMarker($marker) {
+		if(is_string($marker) && strlen($marker) === 1)
+			$this->_marker = $marker;
+		else
+			throw new App_Exception('Marker must be only 1 character long');
 	}
 
 }
