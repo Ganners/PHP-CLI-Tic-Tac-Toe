@@ -105,6 +105,9 @@ class Launcher {
                         $this->_board->draw();
                         ++$this->_turn;
                     } else {
+                        //Draw the winning board
+                        $this->_board->draw();
+                        
                         echo 
 "
 ***************************************************************
