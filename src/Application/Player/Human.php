@@ -37,9 +37,9 @@ class Human implements Player_Interface {
 	 */
 	public function triggerTurn(Board $board) {
 
-		$move = array();
+		$moveMade = false;
 
-		while(empty($move)) {
+		while(!$moveMade) {
 			//Prompt to get move
 			$line = trim(fgets(STDIN));
 			if($line) {
@@ -53,10 +53,19 @@ class Human implements Player_Interface {
                 }
 
                 $move = $handledInput;
+
+                if( $board->makeMove(
+					$this,
+		            (int) $move[0],
+		            (int) $move[1]
+					) ) {
+
+                	$moveMade = TRUE;
+                }
 			}
 		}
 
-		return $move;
+		return TRUE;
 	}
 
 	/**

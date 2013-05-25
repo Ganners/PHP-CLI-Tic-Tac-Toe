@@ -99,16 +99,8 @@ class Launcher {
                 echo $this->_players[$turnKey]->getName() . ', it is now your turn to make a move!' . PHP_EOL .
                         'To do so please enter the x,y co-ordinates of your move (e.g. 2,1): ';
 
-                $move = $this->_players[$turnKey]->triggerTurn($this->_board);
-
-                if($move) {
-                    // Make a move and up the turn!
-                    $this->_board->makeMove(
-                        $this->_players[$turnKey],
-                        (int) $move[0],
-                        (int) $move[1]
-                        );
-
+                if( $this->_players[$turnKey]->triggerTurn($this->_board) ) {
+                    // Redraw the board
                     $this->_board->draw();
                     ++$this->_turn;
                 }
