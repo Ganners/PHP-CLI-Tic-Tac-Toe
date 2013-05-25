@@ -150,6 +150,20 @@ class Board {
 
     }
 
+    /**
+     * Creates a tally array of all scores. This creates a two dimension
+     * array for the score, the first key being the user and the second
+     * key being a string reference to the check type and position of that.
+     * 
+     * @param  int   $requiredSequence - The score we're trying to match, used to
+     *                                   make diagonal tallies more efficient
+     * 
+     * @param  array $users            - Passed by reference so we have a return of
+     *                                   the users
+     * 
+     * @return array
+     * 
+     */
     public function tallyScores($requiredSequence, &$users = array()) {
 
         $scores = array();
@@ -218,7 +232,7 @@ class Board {
         }
 
         return $scores;
-        
+
     }
 
     protected function _wrapStringWithPadding($string, $direction) {
