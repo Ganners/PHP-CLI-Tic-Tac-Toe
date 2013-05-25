@@ -15,7 +15,7 @@ class Board {
     protected $_moves = array(array());
 
     protected $_xSeperator = '|',
-              $_ySeperator = '_',
+              $_ySeperator = "-",
               $_xPadding   = 1,
               $_yPadding   = 1;
 
@@ -72,7 +72,43 @@ class Board {
      * @param  bool   $print - Whether it should print or not
      * @return string        - The string containing our game board
      */
-    public function drawTiles($print = TRUE) {
+    public function draw($print = TRUE) {
+
+        $drawText = '';
+
+        for($y = 0; $y < $this->_yTiles; ++$y) {
+            //Before drawing horizontal tiles
+            
+            $xDrawText = '';
+            for($x = 0; $x < $this->_xTiles; ++$x) {
+                //For each of our horizontal tiles
+                
+                //Draw our player's move, else blank
+                $xDrawText .= ' ';
+
+                if($x < $this->_xTiles-1)
+                    $xDrawText .= $this->_wrapStringWithPadding($this->_xSeperator, 'x');
+
+            }
+
+            $drawText .= $xDrawText;
+
+            //After drawing horizontal tiles
+            if($y < $this->_yTiles-1) {
+                $ySeperator = '';
+                for($i = 0; $i < strlen($xDrawText); ++$i) {
+                    $ySeperator .= $this->_ySeperator;
+                }
+
+                $drawText .= $this->_wrapStringWithPadding($ySeperator, 'y');
+            }
+
+        }
+
+        if($print)
+            echo $drawText;
+
+        return $drawText;
 
     }
 
@@ -84,6 +120,25 @@ class Board {
      * @return int - The player Id
      */
     public function checkWin() {
+
+    }
+
+    protected function _wrapStringWithPadding($string, $direction) {
+
+        $paddingString = '';
+
+        if($direction === 'x') {
+            $paddingCharacter = ' ';
+            $paddingAmount = $this->_xPadding;
+        } else if($direction === 'y') {
+            $paddingCharacter = PHP_EOL;
+            $paddingAmount = $this->_xPadding;
+        }
+
+        for($i = 0; $i < $paddingAmount; ++$i)
+            $paddingString .= $paddingCharacter;
+
+        return "{$paddingString}{$string}{$paddingString}";
 
     }
 

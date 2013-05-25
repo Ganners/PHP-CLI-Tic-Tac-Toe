@@ -67,6 +67,20 @@ class Launcher {
 
         //Get the game rolling!
         if($this->_setupBoard() && $this->_setupPlayers()) {
+
+            echo "
+
+********************************************
+********************************************
+          LAUNCHING TIC TAC TOE
+********************************************
+********************************************
+
+";
+
+            //Draw our board for the first time
+            $this->_board->draw();
+
             // While the application is not terminated
             while(!$this->_terminate) {
 
@@ -86,8 +100,6 @@ class Launcher {
                 (int) $this->_boardDimensions[0],
                 (int) $this->_boardDimensions[1]
                 );
-
-            return TRUE;
         } catch(App_Exception $e) {
 
             //On exception, restart the application
@@ -96,6 +108,7 @@ class Launcher {
 
             return FALSE;
         }
+        return TRUE;
     }
 
     /**
