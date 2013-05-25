@@ -54,14 +54,20 @@ class Human implements Player_Interface {
 
                 $move = $handledInput;
 
-                if( $board->makeMove(
-					$this,
-		            (int) $move[0]-1, //Move has to be -1 as array starts from 0
-		            (int) $move[1]-1  //Move has to be -1 as array starts from 0
-					) ) {
+                try {
+                	//Try and make our move
+	                $board->makeMove(
+						$this,
+			            (int) $move[0]-1, //Move has to be -1 as array starts from 0
+			            (int) $move[1]-1  //Move has to be -1 as array starts from 0
+						);
+	            } catch(App_Exception $e) {
+	            	echo $e->getMessage() . ', please try again: ';
+	            	continue;
+	            }
 
-                	$moveMade = TRUE;
-                }
+	            //If we get this far, our moves been made and we can skip the loop
+	            $moveMade = TRUE;
 			}
 		}
 
