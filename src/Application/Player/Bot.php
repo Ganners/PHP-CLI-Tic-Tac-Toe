@@ -7,7 +7,7 @@ use \Application\Util\Input_Handler;
 use \Application\App_Exception;
 use \Application\Board;
 
-class Human implements Player_Interface {
+class Bot implements Player_Interface {
 
 	protected $_name,
 			  $_uid,
@@ -37,9 +37,9 @@ class Human implements Player_Interface {
 	 */
 	public function triggerTurn(Board $board) {
 
-		$move = array();
+		$moveMade = false;
 
-		while(empty($move)) {
+		while(!$moveMade) {
 			//Prompt to get move
 			$line = trim(fgets(STDIN));
 			if($line) {
@@ -53,10 +53,25 @@ class Human implements Player_Interface {
                 }
 
                 $move = $handledInput;
+
+                try {
+                	//Try and make our move
+	                $board->makeMove(
+						$this,
+			            (int) $move[0]-1, //Move has to be -1 as array starts from 0
+			            (int) $move[1]-1  //Move has to be -1 as array starts from 0
+						);
+	            } catch(App_Exception $e) {
+	            	echo $e->getMessage() . ', please try again: ';
+	            	continue;
+	            }
+
+	            //If we get this far, our moves been made and we can skip the loop
+	            $moveMade = TRUE;
 			}
 		}
 
-		return $move;
+		return TRUE;
 	}
 
 	/**
