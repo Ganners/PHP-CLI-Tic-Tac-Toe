@@ -84,6 +84,8 @@ class Launcher {
             // While the application is not terminated
             while(!$this->_terminate) {
 
+                //This is where we start the turn-based game play
+
             }
         } else {
             $this->run();

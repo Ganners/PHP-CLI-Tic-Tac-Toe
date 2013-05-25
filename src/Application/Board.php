@@ -151,14 +151,14 @@ class Board {
      * @return bool
      */
     protected function _checkBounds($x, $y) {
-
+        
     }
 
     /**
      * Checks if a tile has already been filled
      */
     protected function _checkMoveNotExists($x, $y) {
-
+        
     }
 
 }
