@@ -41,6 +41,13 @@ class Board {
 
     }
 
+    /**
+     * Takes a move for a player, does all of the necessary checks first!
+     * 
+     * @param Player $player - The use of interface Player
+     * @param int $x
+     * @param int $y
+     */
     public function makeMove(Player $player, $x, $y) {
 
         if(!is_int($x) || !is_int($y))
@@ -54,6 +61,8 @@ class Board {
 
         //Make our move, adds player to tile by ID
         $this->_moves[$x][$y] = $player->getId();
+
+        return TRUE;
 
     }
 

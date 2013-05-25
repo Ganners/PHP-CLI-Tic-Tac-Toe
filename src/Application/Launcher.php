@@ -18,7 +18,7 @@ class Launcher {
               $_player1,
               $_player2;
 
-    protected $_sendReceive = array(
+    protected $_informationToGather = array(
                 array(
                     'output_message'  => 'Welcome to the game, please input your board size (x,y): ',
                     'handler_method'  => 'toBoardSizeArray',
@@ -106,7 +106,7 @@ class Launcher {
     }
 
     protected function _resetStartupData() {
-        foreach($this->_sendReceive as $key => $value) {
+        foreach($this->_informationToGather as $key => $value) {
             if(isset($this->{$value['set_as_variable']}))
                 unset($this->{$value['set_as_variable']});
         }
@@ -125,9 +125,9 @@ class Launcher {
          * Our input output array, this is looped through to set the outputs
          * and gather the data for the application.
          */
-        while($this->_inputsReceived < count($this->_sendReceive)) {
+        while($this->_inputsReceived < count($this->_informationToGather)) {
             if($this->_outputsSent === $this->_inputsReceived) {
-                echo $this->_sendReceive[$this->_outputsSent]['output_message'];
+                echo $this->_informationToGather[$this->_outputsSent]['output_message'];
                 ++$this->_outputsSent;
             } else {
                 $line = trim(fgets(STDIN));
@@ -135,7 +135,7 @@ class Launcher {
                     try {
                         //Handler will throw an exception if invalid
                         $handledInput = 
-                            $this->_inputHandler->{$this->_sendReceive[$this->_inputsReceived]['handler_method']}($line);
+                            $this->_inputHandler->{$this->_informationToGather[$this->_inputsReceived]['handler_method']}($line);
                     } catch(App_Exception $e) {
 
                         // If we get an exception, display the message and rewind the output
@@ -146,7 +146,7 @@ class Launcher {
                     }
 
                     //Set variable to an object var if it's all good
-                    $this->{$this->_sendReceive[$this->_inputsReceived]['set_as_variable']} = $handledInput;
+                    $this->{$this->_informationToGather[$this->_inputsReceived]['set_as_variable']} = $handledInput;
                     ++$this->_inputsReceived;
                 }
             }
