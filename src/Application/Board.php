@@ -119,6 +119,23 @@ class Board {
 
     }
 
+    /**
+     * Returns the width (x) of the board
+     * 
+     * @return int - The width of the board
+     */
+    public function getWidth() {
+        return $this->_yTiles;
+    }
+
+    /**
+     * Returns the height (y) of the board
+     * 
+     * @return int - The height of the board
+     */
+    public function getHeight() {
+        return $this->_xTiles;
+    }
 
     /**
      * Checks if there is a win, a win is determined by the smallest of 
@@ -126,7 +143,7 @@ class Board {
      * 
      * @return int
      */
-    public function checkWin() {
+    public function checkWin(&$users = array()) {
 
         //This gives us the sequence in a row we need
         $requiredSequence = $this->_xTiles < $this->_yTiles ? $this->_xTiles : $this->_yTiles;
