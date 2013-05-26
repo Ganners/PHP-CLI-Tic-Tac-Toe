@@ -142,7 +142,6 @@ class Bot implements Player_Interface {
 			$move->rank += $depthRank;
 
 			if($bestMove === NULL || $move->rank > $bestMove->rank) {
-				var_dump($bestMove);
 				$bestMove = $move;
 			}
 
