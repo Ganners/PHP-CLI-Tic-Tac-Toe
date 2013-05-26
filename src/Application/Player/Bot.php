@@ -126,14 +126,23 @@ class Bot implements Player_Interface {
 				}
 			}
 
+			$depthRank = 0;
+
 			// If the move is a draw, look through and check what moves our opponent can make
 			// to determine the best of the draws
 			if($this->_levelNodesExpanded < $this->_maxDepth && $move->rank === 0) {
-				$bestMove = $this->_calculateMinMax($boardCP, $opponent);
+				$bestNodeMove = $this->_calculateMinMax($boardCP, $opponent);
+
+				if(isset($bestNodeMove->rank))
+					$depthRank = $bestNodeMove->rank;
+
 				++$this->_levelNodesExpanded;
 			}
 
+			$move->rank += $depthRank;
+
 			if($bestMove === NULL || $move->rank > $bestMove->rank) {
+				var_dump($bestMove);
 				$bestMove = $move;
 			}
 
