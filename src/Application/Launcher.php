@@ -25,27 +25,27 @@ class Launcher {
                 array(
                     'output_message'  => 'Welcome to the game, please input your board size (x,y): ',
                     'handler_method'  => 'toBoardSizeArray',
-                    'set_as_variable' => '_boardDimensions'
+                    'set_as_variable' => 'boardDimensions'
                 ),
                 array(
                     'output_message'  => 'What is the name of player 1: ',
                     'handler_method'  => 'toString',
-                    'set_as_variable' => '_player1Name'
+                    'set_as_variable' => 'player1Name'
                 ),
                 array(
                     'output_message'  => 'What is the name of player 2: ',
                     'handler_method'  => 'toString',
-                    'set_as_variable' => '_player2Name'
+                    'set_as_variable' => 'player2Name'
                 ),
                 array(
                     'output_message'  => 'Is player 1 a bot? (y/n): ',
                     'handler_method'  => 'toBool',
-                    'set_as_variable' => '_player1Bot'
+                    'set_as_variable' => 'player1Bot'
                 ),
                 array(
                     'output_message'  => 'Is player 2 a bot? (y/n): ',
                     'handler_method'  => 'toBool',
-                    'set_as_variable' => '_player2Bot'
+                    'set_as_variable' => 'player2Bot'
                 ),
             );
 
@@ -137,10 +137,14 @@ Thank you for playing, this game was created by Mark Gannaway
      * Sets up our game board based on input
      */
     protected function _setupBoard() {
+
+        if(!isset($this->boardDimensions))
+            throw new App_Exception('Board dimensions not set');
+
         try {
             $this->_board = new Board(
-                (int) $this->_boardDimensions[0],
-                (int) $this->_boardDimensions[1]
+                (int) $this->boardDimensions[0],
+                (int) $this->boardDimensions[1]
                 );
         } catch(App_Exception $e) {
 
@@ -163,19 +167,19 @@ Thank you for playing, this game was created by Mark Gannaway
     protected function _setupPlayers() {
 
         //Sort-of factory for player 1
-        if($this->_player1Name) {
-            if($this->_player1Bot)
-                $this->_players[0] = new Bot($this->_player1Name, 0, 'O');
+        if(isset($this->player1Name) && $this->player1Name) {
+            if(isset($this->player1Bot) && $this->player1Bot)
+                $this->_players[0] = new Bot($this->player1Name, 0, 'O');
             else
-                $this->_players[0] = new Human($this->_player1Name, 0, 'O');
+                $this->_players[0] = new Human($this->player1Name, 0, 'O');
         }
 
         //Sort of factory for player 2
-        if($this->_player2Name) {
-            if($this->_player2Bot)
-                $this->_players[1] = new Bot($this->_player2Name, 1, 'X');
+        if(isset($this->player2Name) && $this->player2Name) {
+            if(isset($this->player2Bot) && $this->player2Bot)
+                $this->_players[1] = new Bot($this->player2Name, 1, 'X');
             else
-                $this->_players[1] = new Human($this->_player2Name, 1, 'X');
+                $this->_players[1] = new Human($this->player2Name, 1, 'X');
         }
 
         if(count($this->_players) < 2)
@@ -202,7 +206,10 @@ Thank you for playing, this game was created by Mark Gannaway
     /**
      * Asks and gathers our data to startup our application
      */
-    protected function _gatherStartupData() {
+    protected function _gatherStartupData($stdin = NULL) {
+
+        if($stdin === NULL)
+            $stdin = STDIN;
 
         /**
          * Our input output array, this is looped through to set the outputs
@@ -213,7 +220,7 @@ Thank you for playing, this game was created by Mark Gannaway
                 echo $this->_informationToGather[$this->_outputsSent]['output_message'];
                 ++$this->_outputsSent;
             } else {
-                $line = trim(fgets(STDIN));
+                $line = trim(stream_get_line($stdin, 1024, PHP_EOL));
                 if($line) {
                     try {
                         //Handler will throw an exception if invalid
