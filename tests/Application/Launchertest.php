@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../src/autoload.php");
-
 use \Application\Launcher;
 use \Application\App_Exception;
 use \Application\Util\Input_Handler;
