@@ -18,6 +18,7 @@ class BoardTest extends PHPUnit_Framework_TestCase {
 			$this->boardWidth
 			);
 
+		//Add some users to insert moves as
 		$this->player1 = new Human('Player1', 0, 'O');
 		$this->player2 = new Human('Player2', 1, 'X');
 
