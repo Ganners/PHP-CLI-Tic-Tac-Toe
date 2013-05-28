@@ -120,6 +120,13 @@ class Board {
     }
 
     /**
+     * Clears the board of all moves
+     */
+    public function clearBoard() {
+        $this->_moves = array();
+    }
+
+    /**
      * Returns the width (x) of the board
      * 
      * @return int - The width of the board
