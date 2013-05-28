@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="src/autoload.php" colors="false">
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory suffix="test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-html" target="review/code-coverage" />
+        <log type="coverage-clover" target="review/logs/phpunit.xml" />
+        <log type="json" target="review/logs/phpunit.json" />
+        <log type="tap" target="review/logs/phpunit.tap" />
+        <log type="junit" target="review/logs/phpunit-junit.xml" />
+        <log type="testdox-html" target="review/testdox.html" />
+        <log type="testdox-text" target="review/testdox.txt" />
+    </logging>
+</phpunit>

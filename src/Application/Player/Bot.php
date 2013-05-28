@@ -16,7 +16,7 @@ class Bot implements Player_Interface {
 
 	protected $_totalNodesExpanded = 0,
 			  $_levelNodesExpanded = 0,
-			  $_maxDepth           = 3,
+			  $_maxDepth           = 4,
 			  $_bestMove,
 			  $_gameState;
 
@@ -48,19 +48,23 @@ class Bot implements Player_Interface {
 		for($y = 0; $y < $board->getWidth(); ++$y) {
 			for($x = 0; $x < $board->getHeight(); ++$x) {
 				$moves[] = (object) array(
-					'rank'        => 0,
+					'rank'        => NULL,
 					'coordinates' => array($x, $y),
 				);
 			}
 		}
 
+		//var_dump($moves);
+		//echo "-------------------------\n";
 		$this->_gameState = (object) array(
 			'player' => $this,
 			'moves'  => $moves,
-			'best_move' => array(0,0)
+			'best_move' => array(0,0),
 			);
 
 		$move = $this->_calculateMinMax($board);
+
+		//var_dump($this->_gameState);
 
         try {
         	//Try and make our move
@@ -76,20 +80,33 @@ class Bot implements Player_Interface {
 		return TRUE;
 	}
 
-	protected function _calculateMinMax(Board $board, $opponent = NULL) {
+	/**
+	 * For each available move
+	 *   Check if move is possible
+	 *   Check if move will win/draw/lose
+	 *   If move will draw, find out the best move for the other player, if the other player can win then return -1 (min)
+	 *   If the draw is now a -1, set it's parent node to the -1 and don't continue
+	 *   Otherwise, continue until it's a win, at which point you set the parent node to a 1 (max)
+	 * 
+	 * @todo  move the available tiles to the board
+	 * @todo  write tests for this! Important as it will inevitably speed up development
+	 */
+	protected function _calculateMinMax(Board $board, $opponent = NULL, $depth = 0) {
 
-		$this->_totalNodesExpanded += $this->_levelNodesExpanded;
-		$_levelNodesExpanded = 0;
 		$bestMove = NULL;
 
-		//Make a copy of the board
-		$boardCP = clone $board;
-
 		$player = $opponent ? $opponent : $this;
+		//echo "\nPlaying as player: " . $player->getName();
 
 		//Loop through moves and check what the game state is after the '
 		//mock move' has been made
 		foreach($this->_gameState->moves as $key => &$move) {
+
+			$_levelNodesExpanded = 0;
+			
+			//Make a copy of the board
+			$boardCP = clone $board;
+
 			//Test move on board copy
 			try {
 				$boardCP->makeMove(
@@ -104,6 +121,7 @@ class Bot implements Player_Interface {
 
 			//Our move was made successfully, check the board state
 			$state = $boardCP->checkWin($users);
+			//var_dump($boardCP->tallyScores(3));
 
 			$opponent;
 			//Find the user that isn't player (result switches between us an opponent)
@@ -112,38 +130,46 @@ class Bot implements Player_Interface {
 					$opponent = $user;
 			}
 
+			//echo "\nPlayer is :" . $player->getName() . " AND the opponent is: " . $opponent->getName();
+
 			if($state === FALSE) {
 				//Draw, no one has won
 				$move->rank = 0;
 			} else if($state instanceof Player_Interface) {
+
+				//Log who won it on that tile
+				$this->_gameState->moves[$key]->winner = $state->getName();
+
 				//A player has won, determine if us or someone else
 				if($state->getId() === $this->getId()) {
 					//It matches our ID, we win
 					$move->rank = 1;
 				} else {
-					//It's not us, so we lost :-(
 					$move->rank = -1;
 				}
 			}
 
-			$depthRank = 0;
+			$depthRank = $move->rank;
 
 			// If the move is a draw, look through and check what moves our opponent can make
 			// to determine the best of the draws
-			if($this->_levelNodesExpanded < $this->_maxDepth && $move->rank === 0) {
-				$bestNodeMove = $this->_calculateMinMax($boardCP, $opponent);
+			if($depth <= $this->_maxDepth && $move->rank === 0) {
+				$childMoves = $this->_calculateMinMax($boardCP, $opponent, ++$depth);
 
-				if(isset($bestNodeMove->rank))
-					$depthRank = $bestNodeMove->rank;
-
-				++$this->_levelNodesExpanded;
+				if(isset($childMoves->rank)) {
+					$depthRank = $childMoves->rank;
+				}
 			}
 
-			$move->rank += $depthRank;
+			$move->rank = $depthRank;
 
-			if($bestMove === NULL || $move->rank > $bestMove->rank) {
+			if($bestMove === NULL || ($move->rank > $bestMove->rank) {
 				$bestMove = $move;
 			}
+
+			$bestMove = $move;
+
+			//$this->_gameState->moves[$key]->rank = $move->rank;
 
 			++$this->_totalNodesExpanded;
 		}
