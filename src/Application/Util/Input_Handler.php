@@ -7,13 +7,6 @@ use \Application\App_Exception;
 class Input_Handler {
 
     /**
-     * Our construct
-     */
-    public function __construct() {
-
-    }
-
-    /**
      * Converts a string to an array suitible for the
      * input of a board size, i.e. length of 2
      * 
@@ -29,11 +22,11 @@ class Input_Handler {
 
         //Check for empty elements
         foreach($array as $key => $value) {
-            if($value)
+            if($value !== '')
                 $cleanArray[] = $value;
         }
 
-        if(count($cleanArray) < 2)
+        if(count($cleanArray) < 2 || count($cleanArray) > 2)
             throw new App_Exception('Input not in the correct format');
         else
             return $cleanArray;
@@ -66,6 +59,8 @@ class Input_Handler {
      * @throws App_Exception if input is not y/n/yes/no
      */
     public function toBool($input) {
+
+        $input = strtolower($input);
 
         if($input === 'y' || $input === 'yes')
             return TRUE;
