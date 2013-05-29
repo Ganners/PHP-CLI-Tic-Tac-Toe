@@ -35,13 +35,16 @@ class Human implements Player_Interface {
 	 * @param Board $board - Our board object
 	 * @return array $move - 2 key array (x,y)
 	 */
-	public function triggerTurn(Board $board) {
+	public function triggerTurn(Board $board, $stdin = NULL) {
+		
+        if($stdin === NULL)
+            $stdin = STDIN;
 
 		$moveMade = false;
 
 		while(!$moveMade) {
 			//Prompt to get move
-			$line = trim(fgets(STDIN));
+			$line = trim(fgets($stdin));
 			if($line) {
                 try {
                     //Handler will throw an exception if invalid
