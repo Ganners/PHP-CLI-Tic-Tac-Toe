@@ -57,9 +57,7 @@ class Bot implements Player_Interface {
 		//var_dump($moves);
 		//echo "-------------------------\n";
 		$this->_gameState = (object) array(
-			'player' => $this,
 			'moves'  => $moves,
-			'best_move' => array(0,0),
 			);
 
 		$move = $this->_calculateMinMax($board);

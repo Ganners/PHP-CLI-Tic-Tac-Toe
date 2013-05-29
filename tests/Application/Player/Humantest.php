@@ -17,7 +17,8 @@ class HumanTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testTriggerTurn() {
-
+$humanReflection = new ReflectionClass('Application\Player\Human');
+        $_markerReflection = $humanReflection->getProperty('_marker');
 		//Create a mock for the board
 		$Board = $this->getMockBuilder('\Application\Board')
 					  ->disableOriginalConstructor()
